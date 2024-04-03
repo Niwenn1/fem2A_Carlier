@@ -38,6 +38,7 @@ void run_tests()
     if( t_lmesh ) Tests::test_load_mesh();
     if( t_io ) Tests::test_load_save_mesh();
     if( t_quad ) Tests::test_quadrature();
+    ElementMapping( const square.mesh, bool false, int 4 )
 }
 
 void run_simu()

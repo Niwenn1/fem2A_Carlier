@@ -62,15 +62,12 @@ namespace FEM2A {
         		i = i+1;
         	}
         	std::cout << "somme : " << somme << std::endl;
-        	if (somme == 0.5)
-        	{
-        		return true;
-        	}
-        	else
-        	{
-        		return false;
-        	}
+        	return true;
         }
-
+		bool test element_mapping(){
+			Mesh carré;
+			mesh.load("square.mesh")
+			
+		}
     }
 }

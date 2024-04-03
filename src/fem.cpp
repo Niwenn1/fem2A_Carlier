@@ -135,7 +135,11 @@ namespace FEM2A {
         std::cout << "[ElementMapping] constructor for element " << i << " ";
         if ( border ) std::cout << "(border)";
         std::cout << '\n';
-        // TODO
+        int v=0;
+        while (v<M.nb_vertices()) {
+        	std::cout << M.get_vertex(i)<< std::endl ;
+        	v = v+1;
+        	}
     }
 
     vertex ElementMapping::transform( vertex x_r ) const
