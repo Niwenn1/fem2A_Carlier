@@ -50,6 +50,27 @@ namespace FEM2A {
             mesh.save("data/geothermie_4.mesh");
             return true;
         }
+        
+        bool test_quadrature()
+        {
+        	Quadrature quad;
+        	quad = quad.get_quadrature(2,false);
+        	int i=0;
+        	float somme = 0;
+        	while (i<quad.nb_points()) {
+        		somme = somme + quad.weight(i);
+        		i = i+1;
+        	}
+        	std::cout << "somme : " << somme << std::endl;
+        	if (somme == 0.5)
+        	{
+        		return true;
+        	}
+        	else
+        	{
+        		return false;
+        	}
+        }
 
     }
 }
