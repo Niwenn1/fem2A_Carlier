@@ -64,10 +64,14 @@ namespace FEM2A {
         	std::cout << "somme : " << somme << std::endl;
         	return true;
         }
-		bool test element_mapping(){
-			Mesh carré;
-			mesh.load("square.mesh")
-			
-		}
+
+		bool test_ElementMapping()
+		{
+			Mesh carre;
+			carre.load("data/square.mesh");
+			// test sur le triangle 4 de square.mesh
+			ElementMapping( carre, false, 4 );
+			return true;
+    	}
     }
 }

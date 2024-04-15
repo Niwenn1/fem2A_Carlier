@@ -133,13 +133,23 @@ namespace FEM2A {
         : border_( border )
     {
         std::cout << "[ElementMapping] constructor for element " << i << " ";
-        if ( border ) std::cout << "(border)";
         std::cout << '\n';
-        int v=0;
-        while (v<M.nb_vertices()) {
-        	std::cout << M.get_vertex(i)<< std::endl ;
-        	v = v+1;
+        if ( border==true ) {
+        	for (int v = 0; v < 2; ++v ){
+        		vertices_.push_back(M.get_edge_vertex(i,v));
+        	} 
+        	for (int v = 0; v < 2; ++v ){ 
+        		std::cout << "x : " << vertices_[v].x << " et y : " << vertices_[v].y << std::endl;
         	}
+        }
+        else {
+        	for ( int v = 0; v < 3; ++v ){
+        		vertices_.push_back(M.get_triangle_vertex(i,v)) ;
+        	} 
+        	for ( int v = 0; v < 3; ++v ){
+        		std::cout << "x : " << vertices_[v].x << " et y : " << vertices_[v].y << std::endl;
+        	} 
+        }
     }
 
     vertex ElementMapping::transform( vertex x_r ) const
@@ -147,6 +157,8 @@ namespace FEM2A {
         std::cout << "[ElementMapping] transform reference to world space" << '\n';
         // TODO
         vertex r ;
+        //if (border_ ) {
+        
         return r ;
     }
 
