@@ -32,7 +32,7 @@ void run_tests()
     const bool t_lmesh = false;
     const bool t_io = false;
     const bool t_quad = false;
-    const bool t_elmap = true;
+    const bool t_elmap = false;
     
 
     if( t_opennl ) test_opennl();
@@ -50,7 +50,7 @@ void run_simu()
     const bool verbose = flag_is_used( "-v", arguments )
         || flag_is_used( "--verbose", arguments );
 
-    if( simu_pure_dirichlet ) {
+    if( simu_pure_dirichlet ) { 
         Simu::pure_dirichlet_pb("data/square.mesh", verbose);
     }
 }
