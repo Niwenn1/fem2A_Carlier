@@ -204,8 +204,6 @@ namespace FEM2A {
 
     vec2 ShapeFunctions::evaluate_grad( int i, vertex x_r ) const
     {
-        std::cout << "[ShapeFunctions] evaluate gradient shape function " << i << '\n';
-        // TODO
         vec2 g ;
         if (dim_ == 1 ) {
         	switch(i) {
@@ -215,6 +213,7 @@ namespace FEM2A {
         			g.x = 1.; break;
         	}
         	g.y = 0. ;
+        }
         else {
         	switch(i) {
         		case 0:

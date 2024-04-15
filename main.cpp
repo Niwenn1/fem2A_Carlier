@@ -32,14 +32,16 @@ void run_tests()
     const bool t_lmesh = false;
     const bool t_io = false;
     const bool t_quad = false;
-    const bool t_elmap = false;
+    const bool t_const_elmap = false;
+    const bool t_transform_elmap = true;
     
 
     if( t_opennl ) test_opennl();
     if( t_lmesh ) Tests::test_load_mesh();
     if( t_io ) Tests::test_load_save_mesh();
     if( t_quad ) Tests::test_quadrature();
-    if( t_elmap ) Tests::test_ElementMapping();
+    if( t_const_elmap ) Tests::test_ElementMapping();
+    if( t_transform_elmap ) Tests::test_transform_ElementMaping();
 }
 
 void run_simu()

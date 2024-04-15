@@ -72,6 +72,19 @@ namespace FEM2A {
 			// test sur le triangle 4 de square.mesh
 			ElementMapping( carre, false, 4 );
 			return true;
+		}
+		bool test_transform_ElementMaping() {
+			Mesh carre;
+			carre.load("data/square.mesh");
+			vertex v;
+			v.x = 0.2;
+			v.y = 0.4;
+			vertex u;
+			ElementMapping U( carre, false, 4 );
+			u = U.transform(v);
+			std::cout << "x :" << u.x << "y : " << u.y <<std::endl;
+			return true;
+		}
     	}
     }
-}
+
