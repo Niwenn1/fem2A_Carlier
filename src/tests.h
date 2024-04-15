@@ -85,6 +85,20 @@ namespace FEM2A {
 			std::cout << "x :" << u.x << "y : " << u.y <<std::endl;
 			return true;
 		}
+		bool test_mat_et_jacobien() {
+		Mesh carre;
+			carre.load("data/square.mesh");
+			vertex v;
+			v.x = 0.2;
+			v.y = 0.4;
+			DenseMatrix D;
+			ElementMapping EL( carre, false, 4 );
+			D = EL.jacobian_matrix( v );
+			D.print();
+			double det = EL.jacobian (v);
+			std::cout << "\n Jacobien : " << det << std::endl;
+			return true;
+		}
     	}
     }
 
