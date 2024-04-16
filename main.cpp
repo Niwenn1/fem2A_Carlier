@@ -35,7 +35,9 @@ void run_tests()
     const bool t_const_elmap = false;
     const bool t_transform_elmap = false;
     const bool t_matrice_jacob_jacobien = false;
-    const bool t_shape_functions = true;
+    const bool t_shape_functions = false;
+    const bool t_ass_elmt_matrix = true;
+    const bool t_ass_elmt_vector = false;
 
     
 
@@ -47,6 +49,9 @@ void run_tests()
     if( t_transform_elmap ) Tests::test_transform_ElementMaping();
     if( t_matrice_jacob_jacobien ) Tests::test_mat_et_jacobien();
     if( t_shape_functions ) Tests::test_shape_functions();
+    if( t_ass_elmt_matrix ) Tests::test_ass_elmt_matrix();
+    //if( t_ass_elmt_vector ) Tests::test_ass_elmt_vector();
+    
 }
 
 void run_simu()

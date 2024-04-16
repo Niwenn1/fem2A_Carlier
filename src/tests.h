@@ -86,7 +86,7 @@ namespace FEM2A {
 			return true;
 		}
 		bool test_mat_et_jacobien() {
-		Mesh carre;
+			Mesh carre;
 			carre.load("data/square.mesh");
 			vertex v;
 			v.x = 0.2;
@@ -110,6 +110,57 @@ namespace FEM2A {
 			std::cout << ShapeFunctions( 2, 1 ).evaluate( 2, v ) << std::endl;
 			return true;
 		}
+		
+		double unit_fct( vertex v )
+        	{
+            		return 1.;
+        	}
+
+        	double zero_fct( vertex v )
+        	{
+            		return 0.;
+        	}
+
+        	double xy_fct( vertex v )
+        	{	
+            		return v.x + v.y;
+       	 	}
+		
+		bool test_ass_elmt_matrix() {
+			Mesh carre;
+			carre.load("data/square.mesh");
+			Quadrature quad;
+        		quad = quad.get_quadrature(2,false);
+			ShapeFunctions SF (2, 1);
+			vertex v;
+			v.x = 0.2;
+			v.y = 0.4;
+			DenseMatrix Ke;
+			SparseMatrix K(carre.nb_vertices());
+			ElementMapping EL( carre, false, 4 );
+			assemble_elementary_matrix( EL, SF, quad, unit_fct, Ke);
+			//Ke.print();
+			// t=4 index du rectangle 4
+			local_to_global_matrix( carre, 4, Ke, K);
+			K.print();
+			return true;
+		}
+		
+		/*bool test_ass_elmt_vector() {
+			Mesh carre;
+			carre.load("data/square.mesh");
+			Quadrature quad;
+        		quad = quad.get_quadrature(2,false);
+			ShapeFunctions SF (2, 1);
+			vertex v;
+			v.x = 0.2;
+			v.y = 0.4;
+			std::vector< double >& Fe;
+			ElementMapping EL( carre, false, 4 );
+			assemble_elementary_vector( EL, SF, quad, unit_fct, Fe);
+			Fe.print();
+			return true;
+		*/
     	}
     }
 
