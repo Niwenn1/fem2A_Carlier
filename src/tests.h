@@ -99,6 +99,17 @@ namespace FEM2A {
 			std::cout << "\n Jacobien : " << det << std::endl;
 			return true;
 		}
+		
+		bool test_shape_functions() {
+			//ShapeFunctions( 3, 2 );
+			ShapeFunctions( 2, 1 );
+			//std::cout << ShapeFunctions( 2, 1 ).nb_functions() << std::endl;
+			vertex v;
+			v.x = 0.2;
+			v.y = 0.4;
+			std::cout << ShapeFunctions( 2, 1 ).evaluate( 2, v ) << std::endl;
+			return true;
+		}
     	}
     }
 

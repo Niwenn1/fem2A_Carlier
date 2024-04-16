@@ -34,7 +34,8 @@ void run_tests()
     const bool t_quad = false;
     const bool t_const_elmap = false;
     const bool t_transform_elmap = false;
-    const bool t_matrice_jacob_jacobien = true;
+    const bool t_matrice_jacob_jacobien = false;
+    const bool t_shape_functions = true;
 
     
 
@@ -45,6 +46,7 @@ void run_tests()
     if( t_const_elmap ) Tests::test_ElementMapping();
     if( t_transform_elmap ) Tests::test_transform_ElementMaping();
     if( t_matrice_jacob_jacobien ) Tests::test_mat_et_jacobien();
+    if( t_shape_functions ) Tests::test_shape_functions();
 }
 
 void run_simu()

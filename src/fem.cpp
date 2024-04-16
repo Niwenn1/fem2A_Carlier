@@ -283,6 +283,7 @@ namespace FEM2A {
     {
         std::cout << "compute elementary matrix" << '\n';
         // TODO
+        
     }
 
     void local_to_global_matrix(
