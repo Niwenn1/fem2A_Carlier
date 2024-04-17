@@ -228,20 +228,20 @@ namespace FEM2A {
         	double xi = x_r.x ;
         	switch(i) {
         		case(0):
-        			return 1-xi;
+        			return 1-xi; break;
         		case(1):
-        			return xi;
+        			return xi; break;
         	}
         }
         else {
         	double xi = x_r.x ; double eta = x_r.y;
         	switch(i) {
         		case(0):
-        			return 1-xi-eta;
+        			return 1-xi-eta; break;
         		case(1):
-        			return xi;
+        			return xi; break;
         		case(2):
-        			return eta;
+        			return eta; break;
         	}
         }			
     }
@@ -369,8 +369,22 @@ namespace FEM2A {
         SparseMatrix& K,
         std::vector< double >& F )
     {
-        std::cout << "apply dirichlet boundary conditions" << '\n';
-        // TODO
+        std::vector< bool > processed_vertices(values.size(), false);
+        double P = 10000.;
+        for (int edge = 0; edge < M.nb_edges(); edge++ ) {
+        	int edge_attribute = M.get_edge_attribute(edge);
+        	if( attribute_is_dirichlet[edge_attribute] ) {
+        		for( int v=0; v < 2; v++ ) {
+        			int vertex_index = M.get_edge_vertex_index(edge, v);
+        			if ( !processed_vertices[vertex_index] ) {
+        				processed_vertices[vertex_index] = true;
+        				K.add(vertex_index, vertex_index, P);
+        				F[vertex_index] += P*values[vertex_index];
+        			}
+        		}
+        	}
+        }
+        
     }
 
     void solve_poisson_problem(
