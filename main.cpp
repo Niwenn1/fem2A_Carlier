@@ -66,7 +66,9 @@ void run_simu()
         || flag_is_used( "--verbose", arguments );
 
     if( simu_pure_dirichlet ) { 
-        Simu::pure_dirichlet_pb("data/square.mesh", verbose);
+        //Simu::pure_dirichlet_pb("data/square.mesh", verbose);
+        //Simu::source_dirichlet_pb("data/square.mesh", verbose);
+        Simu::sinus_dirichlet_pb("data/square.mesh", verbose);
     }
 }
 

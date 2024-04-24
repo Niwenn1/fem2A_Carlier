@@ -323,20 +323,15 @@ namespace FEM2A {
         double (*source)(vertex),
         std::vector< double >& Fe )
     {
-        /*std::cout << "compute elementary vector (source term)" << '\n';
-        // TODO
-        Fe.set_size(reference_functions.nb_functions(), reference_functions.nb_functions());
         for ( int i = 0; i < reference_functions.nb_functions(); ++i ) {
-        	Fe.set(i, j, 0.);
+        	double s = 0;
         	for (int k=0; k< quadrature.nb_points(); ++k ) {
         		vertex p_k = quadrature.point(k);
         		double w_k = quadrature.weight(k);
-        		DenseMatrix inv_J = elt_mapping.jacobian_matrix(p_k).invert_2x2();
-        		vec2 grad_i = inv_J.transpose().mult_2x2_2(reference_functions.evaluate_grad(i, p_k));
-        		vec2 grad_j = inv_J.transpose().mult_2x2_2(reference_functions.evaluate_grad(j, p_k));
-        		Fe.add(i, j, w_k * coefficient(elt_mapping.transform(p_k)) * dot(grad_i, grad_j) * elt_mapping.jacobian(p_k));			
+        		s += w_k * source(elt_mapping.transform(p_k)) * reference_functions.evaluate(i, p_k) * elt_mapping.jacobian(p_k);			
         	}
-        }*/
+        	Fe[i] = s;
+        }
     }
 
     void assemble_elementary_neumann_vector(
@@ -358,8 +353,10 @@ namespace FEM2A {
         std::vector< double >& Fe,
         std::vector< double >& F )
     {
-        std::cout << "Fe -> F" << '\n';
-        // TODO
+        for (int y=0; y<Fe.size(); ++y) {
+        	int a = M.get_triangle_vertex_index( i, y );
+        	F[a] = Fe[y];
+        }
     }
 
     void apply_dirichlet_boundary_conditions(

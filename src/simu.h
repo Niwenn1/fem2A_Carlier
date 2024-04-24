@@ -27,6 +27,12 @@ namespace FEM2A {
         {
             return v.x + v.y;
         }
+        
+        double sinus_fct ( vertex v )
+        {
+        	double pi = 3.14159265;
+        	return 2*(pi*pi)*sin(pi*v.x)*sin(pi*v.y);
+        }
 
         //#################################
         //  Simulations
@@ -35,40 +41,134 @@ namespace FEM2A {
         void pure_dirichlet_pb( const std::string& mesh_filename, bool verbose )
         {
             std::cout << "Solving a pure Dirichlet problem" << std::endl;
-            Mesh M;
-            M.load(mesh_filename);
-            SparseMatrix K_glob(M.nb_vertices());
-            std::vector<double> F_glob(M.nb_vertices(), 0.);
-            for ( int t = 0; t < M.nb_triangles(); ++t ) {
-            	ElementMapping my_map(M, false, t);
-            	ShapeFunctions my_shpfct(2, 1);
-            	Quadrature my_quad = Quadrature::get_quadrature(2);
+            
+            Mesh mesh;
+            mesh.load(mesh_filename);
+            
+            std::vector<double> F_globale(mesh.nb_vertices(), 0.);
+            SparseMatrix K_globale(mesh.nb_vertices());
+
+            for ( int a = 0; a < mesh.nb_triangles(); ++a ) {
             	DenseMatrix Ke;
-            	assemble_elementary_matrix(my_map, my_shpfct, my_quad, unit_fct, Ke);
-            	local_to_global_matrix(M, t, Ke, K_glob);
+            	ElementMapping mapping(mesh, false, a);
+            	Quadrature quadrature = Quadrature::get_quadrature(2);
+            	ShapeFunctions shapefunctions(2, 1);
+            	assemble_elementary_matrix(mapping, shapefunctions, quadrature, unit_fct, Ke);
+            	local_to_global_matrix(mesh, a, Ke, K_globale);
             }
-            std::vector< bool > att_is_dirichlet(2, false);
-            att_is_dirichlet[1] = true;
-            M.set_attribute(unit_fct, 1, true);
-            std::vector < double > imposed_values(M.nb_vertices());
-            for ( int i = 0; i<M.nb_vertices(); ++i) {
-            	imposed_values[i] = xy_fct(M.get_vertex(i));
+            
+            std::vector< bool > attribute_dirichlet(2, false);
+            attribute_dirichlet[1] = true;
+            mesh.set_attribute(unit_fct, 1, true);
+            std::vector < double > imposed_v(mesh.nb_vertices());
+            
+            for ( int b = 0; b<mesh.nb_vertices(); ++b) {
+            	imposed_v[b] = xy_fct(mesh.get_vertex(b));
             }
-            apply_dirichlet_boundary_conditions(M, att_is_dirichlet, imposed_values, K_glob, F_glob);
-            std::vector<double> u(M.nb_vertices());
-            solve(K_glob, F_glob, u);
-            std::string export_name = "pure_dirichlet";
-            M.save(export_name+".mesh");
+            
+            apply_dirichlet_boundary_conditions(mesh, attribute_dirichlet, imposed_v, K_globale, F_globale);
+            std::vector<double> u(mesh.nb_vertices());
+            solve(K_globale, F_globale, u);
+            std::string export_name = "square_pure_dirichlet";
+            mesh.save(export_name+".mesh");
             save_solution(u, export_name +".bb");
+            
             if ( verbose ) {
                 std::cout << " with lots of printed details..." << std::endl;
             }
             
         }
-	bool test_pure_dirichlet_pb() {
-			pure_dirichlet_pb( "data/square.mesh", false );
-			return true;
-		}
+        
+        
+        void source_dirichlet_pb( const std::string& mesh_filename, bool verbose )
+        {
+            std::cout << "Solving a pure Dirichlet problem" << std::endl;
+            
+            Mesh mesh;
+            mesh.load(mesh_filename);
+            
+            std::vector<double> F_globale(mesh.nb_vertices(), 0.);
+            SparseMatrix K_globale(mesh.nb_vertices());
+
+            for ( int a = 0; a < mesh.nb_triangles(); ++a ) {
+            	DenseMatrix Ke;
+            	ElementMapping mapping(mesh, false, a);
+            	Quadrature quadrature = Quadrature::get_quadrature(2);
+            	ShapeFunctions shapefunctions(2, 1);
+            	std::vector< double > Fe(shapefunctions.nb_functions());
+            	assemble_elementary_matrix(mapping, shapefunctions, quadrature, unit_fct, Ke);
+            	assemble_elementary_vector(mapping, shapefunctions, quadrature, unit_fct, Fe);
+            	local_to_global_matrix(mesh, a, Ke, K_globale);
+            	local_to_global_vector(mesh, true, a, Fe, F_globale);
+            }
+            
+            std::vector< bool > attribute_dirichlet(2, false);
+            attribute_dirichlet[1] = true;
+            mesh.set_attribute(unit_fct, 1, true);
+            std::vector < double > imposed_v(mesh.nb_vertices());
+            
+            for ( int b = 0; b<mesh.nb_vertices(); ++b) {
+            	imposed_v[b] = zero_fct(mesh.get_vertex(b));
+            }
+            
+            apply_dirichlet_boundary_conditions(mesh, attribute_dirichlet, imposed_v, K_globale, F_globale);
+            std::vector<double> u(mesh.nb_vertices());
+            solve(K_globale, F_globale, u);
+            std::string export_name = "square_fine_source_dirichlet";
+            mesh.save(export_name+".mesh");
+            save_solution(u, export_name +".bb");
+            
+            if ( verbose ) {
+                std::cout << " with lots of printed details..." << std::endl;
+            }
+            
+        }
+        
+        void sinus_dirichlet_pb( const std::string& mesh_filename, bool verbose )
+        {
+            std::cout << "Solving a pure Dirichlet problem" << std::endl;
+            
+            Mesh mesh;
+            mesh.load(mesh_filename);
+            
+            std::vector<double> F_globale(mesh.nb_vertices(), 0.);
+            SparseMatrix K_globale(mesh.nb_vertices());
+
+            for ( int a = 0; a < mesh.nb_triangles(); ++a ) {
+            	DenseMatrix Ke;
+            	ElementMapping mapping(mesh, false, a);
+            	Quadrature quadrature = Quadrature::get_quadrature(2);
+            	ShapeFunctions shapefunctions(2, 1);
+            	std::vector< double > Fe(shapefunctions.nb_functions());
+            	assemble_elementary_matrix(mapping, shapefunctions, quadrature, unit_fct, Ke);
+            	assemble_elementary_vector(mapping, shapefunctions, quadrature, sinus_fct, Fe);
+            	local_to_global_matrix(mesh, a, Ke, K_globale);
+            	local_to_global_vector(mesh, true, a, Fe, F_globale);
+            }
+            
+            std::vector< bool > attribute_dirichlet(2, false);
+            attribute_dirichlet[1] = true;
+            mesh.set_attribute(unit_fct, 1, true);
+            std::vector < double > imposed_v(mesh.nb_vertices());
+            
+            for ( int b = 0; b<mesh.nb_vertices(); ++b) {
+            	imposed_v[b] = zero_fct(mesh.get_vertex(b));
+            }
+            
+            apply_dirichlet_boundary_conditions(mesh, attribute_dirichlet, imposed_v, K_globale, F_globale);
+            std::vector<double> u(mesh.nb_vertices());
+            solve(K_globale, F_globale, u);
+            std::string export_name = "square_sinus_bump_dirichlet";
+            mesh.save(export_name+".mesh");
+            save_solution(u, export_name +".bb");
+            
+            if ( verbose ) {
+                std::cout << " with lots of printed details..." << std::endl;
+            }
+            
+        }
+        
+
     }
 
 }
