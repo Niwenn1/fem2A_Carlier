@@ -185,12 +185,12 @@ namespace FEM2A {
     {
         DenseMatrix J = jacobian_matrix(x_r);
         if ( border_ ) {
-        	double JTJ = J.get(0,0)*J.get(0,0) + J.get(1,0)*J.get(1,0);
-        	return std::sqrt(JTJ);
+        	double JTrans_J = J.get(0,0)*J.get(0,0) + J.get(1,0)*J.get(1,0);
+        	return std::sqrt(JTrans_J);
         }
         else {
-        	double JTJ  = J.det_2x2();
-        	return JTJ;
+        	double JTrans_J  = J.det_2x2();
+        	return JTrans_J;
         }
     }
 
@@ -292,8 +292,7 @@ namespace FEM2A {
         			vec2 grad_i = inv_J.transpose().mult_2x2_2(reference_functions.evaluate_grad(i, p_k));
         			vec2 grad_j = inv_J.transpose().mult_2x2_2(reference_functions.evaluate_grad(j, p_k));
         			Ke.add(i, j, w_k * coefficient(elt_mapping.transform(p_k)) * dot(grad_i, grad_j) * elt_mapping.jacobian(p_k));			
-        		}
-        	
+        		}	
         	}
         }
     }
@@ -334,17 +333,23 @@ namespace FEM2A {
         }
     }
 
-    void assemble_elementary_neumann_vector(
+    /*void assemble_elementary_neumann_vector(
         const ElementMapping& elt_mapping_1D,
         const ShapeFunctions& reference_functions_1D,
         const Quadrature& quadrature_1D,
         double (*neumann)(vertex),
         std::vector< double >& Fe )
     {
-        std::cout << "compute elementary vector (neumann condition)" << '\n';
-        // TODO
-        
-    }
+        for(int a = 0; a < reference_functions_1D.nb_functions(); ++a ){
+        	double S = 0;
+        	for (int b = 0; b < quadrature_1D.nb_points(); ++b ) {
+        		vertex p_q = quadrature_1D.point(b);
+        		double w_q = quadrature_1D.weight(b);
+        		S = S + w_q * neumann(elt_mapping_1D.transform(p_q)) * reference_functions_1D.evaluate(a, p_q) * sqrt(dot(?));
+        	}
+        	Fe[a] = S;
+        }   
+    }*/
 
     void local_to_global_vector(
         const Mesh& M,
@@ -366,17 +371,17 @@ namespace FEM2A {
         SparseMatrix& K,
         std::vector< double >& F )
     {
-        std::vector< bool > processed_vertices(values.size(), false);
-        double P = 10000.;
-        for (int edge = 0; edge < M.nb_edges(); edge++ ) {
-        	int edge_attribute = M.get_edge_attribute(edge);
+        std::vector< bool > vertices(values.size(), false);
+        double p = 10000.;
+        for (int ed = 0; ed < M.nb_edges(); ed++ ) {
+        	int edge_attribute = M.get_edge_attribute(ed);
         	if( attribute_is_dirichlet[edge_attribute] ) {
-        		for( int v=0; v < 2; v++ ) {
-        			int vertex_index = M.get_edge_vertex_index(edge, v);
-        			if ( !processed_vertices[vertex_index] ) {
-        				processed_vertices[vertex_index] = true;
-        				K.add(vertex_index, vertex_index, P);
-        				F[vertex_index] += P*values[vertex_index];
+        		for( int vert=0; vert < 2; vert++ ) {
+        			int vertex_index = M.get_edge_vertex_index(ed, vert);
+        			if ( !vertices[vertex_index] ) {
+        				vertices[vertex_index] = true;
+        				K.add(vertex_index, vertex_index, p);
+        				F[vertex_index] += p*values[vertex_index];
         			}
         		}
         	}

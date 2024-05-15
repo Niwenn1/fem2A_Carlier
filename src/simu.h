@@ -158,7 +158,7 @@ namespace FEM2A {
             apply_dirichlet_boundary_conditions(mesh, attribute_dirichlet, imposed_v, K_globale, F_globale);
             std::vector<double> u(mesh.nb_vertices());
             solve(K_globale, F_globale, u);
-            std::string export_name = "square_sinus_bump_dirichlet";
+            std::string export_name = "square_fine_sinus_bump_dirichlet";
             mesh.save(export_name+".mesh");
             save_solution(u, export_name +".bb");
             

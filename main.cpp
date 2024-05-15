@@ -60,15 +60,16 @@ void run_tests()
 void run_simu()
 {
 
-    const bool simu_pure_dirichlet = true;
-
+    const bool simu_pure_dirichlet = false;
+    const bool simu_source_dirichlet = false;
+    const bool simu_sinus_dirichlet = true;
     const bool verbose = flag_is_used( "-v", arguments )
         || flag_is_used( "--verbose", arguments );
 
-    if( simu_pure_dirichlet ) { 
+    if( simu_sinus_dirichlet ) { 
         //Simu::pure_dirichlet_pb("data/square.mesh", verbose);
         //Simu::source_dirichlet_pb("data/square.mesh", verbose);
-        Simu::sinus_dirichlet_pb("data/square.mesh", verbose);
+        Simu::sinus_dirichlet_pb("data/square_fine.mesh", verbose);
     }
 }
 
